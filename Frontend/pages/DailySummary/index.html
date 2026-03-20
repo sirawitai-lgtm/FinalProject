@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockPro — Daily Summary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/stylesum,ary.css">
+</head>
+<body>
+<div class="dashboard-wrapper">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fas fa-boxes-stacked"></i>
+            <span>StockPro</span>
+        </div>
+
+        <div class="sidebar-user" id="sidebar-user">
+            <div class="user-avatar" id="user-avatar">?</div>
+            <div class="user-info">
+                <div class="user-name" id="user-name">-</div>
+                <div class="user-role" id="user-role">-</div>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="../../index.html"><i class="fas fa-home"></i> Overview</a>
+            <a href="../Inventory/index.html"><i class="fas fa-box"></i> Inventory</a>
+            <a href="../History/index.html"><i class="fas fa-history"></i> History</a>
+            <a href="index.html" class="active"><i class="fas fa-calendar-check"></i> Daily Summary</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="logout('../../')">
+                <i class="fas fa-right-from-bracket"></i> ออกจากระบบ
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-calendar-check" style="color:var(--primary)"></i>
+                Daily Summary
+            </h1>
+            <a href="../../index.html" class="btn-back">
+                <i class="fas fa-arrow-left"></i> กลับหน้าหลัก
+            </a>
+        </div>
+
+        <!-- Dynamic content area -->
+        <div id="content">
+            <div id="loading-spinner">
+                <div class="spinner"></div>
+                <span>กำลังโหลดข้อมูล...</span>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="../../js/auth.js"></script>
+<script src="index.js"></script>
+</body>
+</html>

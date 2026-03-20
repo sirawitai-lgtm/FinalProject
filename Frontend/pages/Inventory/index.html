@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockPro - Inventory Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-boxes-stacked"></i>
+                <span>StockPro</span>
+            </div>
+
+            <div class="sidebar-user" id="sidebar-user">
+                <div class="user-avatar" id="user-avatar">?</div>
+                <div class="user-info">
+                    <div class="user-name" id="user-name">-</div>
+                    <div class="user-role" id="user-role">-</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="../../index.html"><i class="fas fa-home"></i> Overview</a>
+                <a href="#" class="active"><i class="fas fa-box"></i> Inventory</a>
+                <a href="../History/index.html" id="nav-history" style="display:none"><i class="fas fa-history"></i> History</a>
+                <a href="../DailySummary/index.html" id="nav-summary" style="display:none"><i class="fas fa-calendar-check"></i> Daily Summary</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout('../../')">
+                    <i class="fas fa-right-from-bracket"></i> ออกจากระบบ
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Inventory Management</h1>
+            </header>
+
+            <!-- Adjust Stock Form -->
+            <section class="card form-section" style="margin-bottom:1.5rem;">
+                <h2><i class="fas fa-sliders-h"></i> Adjust Stock</h2>
+                <div class="form-group">
+                    <select id="adj-product">
+                        <option value="">-- Select Product --</option>
+                    </select>
+                    <select id="adj-type">
+                        <option value="IN">📥 IN</option>
+                        <option value="OUT">📤 OUT</option>
+                    </select>
+                    <input type="number" id="adj-amount" placeholder="Amount" min="1">
+                    <button class="btn-add" onclick="adjustStock()">Confirm</button>
+                </div>
+            </section>
+
+            <!-- Products Table -->
+            <section class="card table-container">
+                <div class="table-header">
+                    <h2><i class="fas fa-list"></i> All Products</h2>
+                    <div class="table-header-right">
+                        <button class="btn-export" onclick="exportInventoryCSV()" title="Export to CSV">
+                            <i class="fas fa-download"></i> Export CSV
+                        </button>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-input" placeholder="Search product..." onkeyup="filterInventory()">
+                        </div>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product Name</th>
+                            <th>Current Stock</th>
+                            <th>Min Level</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-table-body">
+                        <tr><td colspan="5" style="text-align:center;color:#888;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

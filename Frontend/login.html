@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockPro - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="login-page">
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="login-logo-icon"><i class="fas fa-boxes-stacked"></i></div>
+                <div class="login-logo-text">StockPro</div>
+            </div>
+            <p class="login-subtitle">ระบบจัดการสต็อกสินค้า</p>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">
+                    <i class="fas fa-right-to-bracket"></i> เข้าสู่ระบบ
+                </button>
+                <button class="tab-btn" onclick="switchTab('register')">
+                    <i class="fas fa-user-plus"></i> สมัครสมาชิก
+                </button>
+            </div>
+
+            <!-- LOGIN -->
+            <div class="tab-panel active" id="panel-login">
+                <div class="login-field">
+                    <label>ชื่อผู้ใช้</label>
+                    <input type="text" id="login-username" placeholder="กรอกชื่อผู้ใช้" autocomplete="username">
+                </div>
+                <div class="login-field">
+                    <label>รหัสผ่าน</label>
+                    <input type="password" id="login-password" placeholder="กรอกรหัสผ่าน"
+                        onkeydown="if(event.key==='Enter') doLogin()">
+                </div>
+                <button class="btn-login" id="btn-login" onclick="doLogin()">
+                    <i class="fas fa-right-to-bracket"></i> เข้าสู่ระบบ
+                </button>
+            </div>
+
+            <!-- REGISTER — ไม่มีฟิลด์ชื่อที่แสดงและสิทธิ์ -->
+            <div class="tab-panel" id="panel-register">
+                <div class="login-field">
+                    <label>ชื่อผู้ใช้</label>
+                    <input type="text" id="reg-username" placeholder="กรอกชื่อผู้ใช้">
+                </div>
+                <div class="login-field">
+                    <label>รหัสผ่าน <small style="color:var(--text-muted);font-weight:400;">(อย่างน้อย 4 ตัว)</small></label>
+                    <input type="password" id="reg-password" placeholder="อย่างน้อย 4 ตัวอักษร">
+                </div>
+                <div class="login-field">
+                    <label>ยืนยันรหัสผ่าน</label>
+                    <input type="password" id="reg-confirm" placeholder="กรอกรหัสผ่านอีกครั้ง"
+                        onkeydown="if(event.key==='Enter') doRegister()">
+                </div>
+                <button class="btn-login" id="btn-register" onclick="doRegister()">
+                    <i class="fas fa-user-plus"></i> สมัครสมาชิก
+                </button>
+                <div class="reg-note">
+                    <i class="fas fa-info-circle"></i>
+                    บัญชีที่สมัครจะได้สิทธิ์ <strong>User</strong> — หากต้องการสิทธิ์ Admin ให้ติดต่อผู้ดูแลระบบ
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const BASE_URL = 'http://localhost:8500'
+
+        window.onload = () => {
+            const raw = sessionStorage.getItem('stockpro_user')
+            if (raw) window.location.href = 'index.html'
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach((b, i) =>
+                b.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'))
+            )
+            document.getElementById('panel-login').classList.toggle('active', tab === 'login')
+            document.getElementById('panel-register').classList.toggle('active', tab === 'register')
+        }
+
+        // ── Popup helpers ────────────────────────────────────────────
+        function popupError(title, text) {
+            Swal.fire({
+                icon: 'error',
+                title: title,
+                text: text,
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#6366f1',
+                background: '#1e293b',
+                color: '#f1f5f9',
+                iconColor: '#fb7185',
+                customClass: {
+                    popup: 'swal2-popup',
+                    title: 'swal2-title',
+                    htmlContainer: 'swal2-html-container'
+                }
+            })
+        }
+
+        function popupSuccess(title, text, callback) {
+            Swal.fire({
+                icon: 'success',
+                title: title,
+                text: text,
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#6366f1',
+                background: '#1e293b',
+                color: '#f1f5f9',
+                iconColor: '#34d399',
+                timer: callback ? 1800 : undefined,
+                timerProgressBar: !!callback,
+                customClass: {
+                    popup: 'swal2-popup',
+                    title: 'swal2-title',
+                    htmlContainer: 'swal2-html-container'
+                }
+            }).then(() => { if (callback) callback() })
+        }
+        // ────────────────────────────────────────────────────────────
+
+        async function doLogin() {
+            const username = document.getElementById('login-username').value.trim()
+            const password = document.getElementById('login-password').value
+            const btn      = document.getElementById('btn-login')
+
+            // Validation popup
+            if (!username && !password) {
+                popupError('กรุณากรอกข้อมูล', 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน')
+                return
+            }
+            if (!username) { popupError('กรุณากรอกชื่อผู้ใช้', 'ช่องชื่อผู้ใช้ยังว่างอยู่'); return }
+            if (!password) { popupError('กรุณากรอกรหัสผ่าน', 'ช่องรหัสผ่านยังว่างอยู่'); return }
+
+            btn.disabled = true
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังเข้าสู่ระบบ...'
+            try {
+                const res = await axios.post(`${BASE_URL}/auth/login`, { username, password })
+                sessionStorage.setItem('stockpro_user', JSON.stringify(res.data.user))
+                // Success popup แล้วค่อย redirect
+                popupSuccess('เข้าสู่ระบบสำเร็จ!', `ยินดีต้อนรับ ${res.data.user?.username || username}`, () => {
+                    window.location.href = 'index.html'
+                })
+            } catch (err) {
+                const status  = err.response?.status
+                const message = err.response?.data?.message
+
+                let title = 'เข้าสู่ระบบไม่สำเร็จ'
+                let text  = message || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง'
+
+                if (status === 401) {
+                    title = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
+                    text  = message || 'กรุณาตรวจสอบข้อมูลแล้วลองใหม่'
+                } else if (status === 404) {
+                    title = 'ไม่พบผู้ใช้งาน'
+                    text  = 'ชื่อผู้ใช้นี้ยังไม่ได้ลงทะเบียน'
+                } else if (!err.response) {
+                    title = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้'
+                    text  = 'กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต'
+                }
+
+                popupError(title, text)
+                btn.disabled = false
+                btn.innerHTML = '<i class="fas fa-right-to-bracket"></i> เข้าสู่ระบบ'
+            }
+        }
+
+        async function doRegister() {
+            const username = document.getElementById('reg-username').value.trim()
+            const password = document.getElementById('reg-password').value
+            const confirm  = document.getElementById('reg-confirm').value
+            const btn      = document.getElementById('btn-register')
+
+            // Validation popup
+            if (!username && !password) {
+                popupError('กรุณากรอกข้อมูล', 'กรุณากรfอกชื่อผู้ใช้และรหัสผ่าน')
+                return
+            }
+            if (!username) { popupError('กรุณากรอกชื่อผู้ใช้', 'ช่องชื่อผู้ใช้ยังว่างอยู่'); return }
+            if (!password) { popupError('กรุณากรอกรหัสผ่าน', 'ช่องรหัสผ่านยังว่างอยู่'); return }
+            if (password.length < 4) {
+                popupError('รหัสผ่านสั้นเกินไป', 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร')
+                return
+            }
+            if (password !== confirm) {
+                popupError('รหัสผ่านไม่ตรงกัน', 'กรุณากรอกรหัสผ่านยืนยันให้ตรงกับรหัสผ่านที่ตั้ง')
+                return
+            }
+
+            btn.disabled = true
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังสมัคร...'
+            try {
+                await axios.post(`${BASE_URL}/auth/register`, { username, password })
+                document.getElementById('reg-username').value = ''
+                document.getElementById('reg-password').value = ''
+                document.getElementById('reg-confirm').value  = ''
+                popupSuccess('สมัครสมาชิกสำเร็จ!', 'กรุณาเข้าสู่ระบบด้วยบัญชีที่สมัครไว้', () => {
+                    switchTab('login')
+                })
+            } catch (err) {
+                const status  = err.response?.status
+                const message = err.response?.data?.message
+
+                let title = 'สมัครสมาชิกไม่สำเร็จ'
+                let text  = message || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง'
+
+                if (status === 409) {
+                    title = 'ชื่อผู้ใช้นี้ถูกใช้แล้ว'
+                    text  = 'กรุณาเลือกชื่อผู้ใช้อื่น'
+                } else if (!err.response) {
+                    title = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้'
+                    text  = 'กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต'
+                }
+
+                popupError(title, text)
+            } finally {
+                btn.disabled = false
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> สมัครสมาชิก'
+            }
+        }
+    </script>
+</body>
+</html>

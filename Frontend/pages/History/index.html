@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockPro - History</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-boxes-stacked"></i>
+                <span>StockPro</span>
+            </div>
+
+            <div class="sidebar-user" id="sidebar-user">
+                <div class="user-avatar" id="user-avatar">?</div>
+                <div class="user-info">
+                    <div class="user-name" id="user-name">-</div>
+                    <div class="user-role" id="user-role">-</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="../../index.html"><i class="fas fa-home"></i> Overview</a>
+                <a href="../Inventory/index.html"><i class="fas fa-box"></i> Inventory</a>
+                <a href="#" class="active"><i class="fas fa-history"></i> History</a>
+                <a href="../DailySummary/index.html"><i class="fas fa-calendar-check"></i> Daily Summary</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout('../../')">
+                    <i class="fas fa-right-from-bracket"></i> ออกจากระบบ
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Transaction History</h1>
+            </header>
+
+            <section class="card table-container">
+                <div class="table-header">
+                    <h2><i class="fas fa-history"></i> All Logs</h2>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Search product..." onkeyup="filterLogs()">
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date / Time</th>
+                            <th>Product Name</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                        <tr><td colspan="4" style="text-align:center;color:#888;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
