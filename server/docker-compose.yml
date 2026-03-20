@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_StockPro
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: StockPro
+    ports:
+      - "8100:3306"
+    volumes:
+      - mysql_StockPro:/var/lib/mysql
+    networks:
+      - StockPro
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin_StockPro
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+      UPLOAD_LIMIT: 64M
+    ports:
+      - "8101:80"
+    depends_on:
+      - db
+    networks:
+      - StockPro
+    restart: always
+
+networks:
+  StockPro:
+    driver: bridge
+
+volumes:
+  mysql_StockPro:
+    driver: local
+  
